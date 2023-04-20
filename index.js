@@ -17,6 +17,17 @@ let notes = [
     content: 'GET and POST are the most important methods of HTTP protocol',
     important: true,
   },
+  {
+    id: 4,
+    content: 'GET and POST are the most important methods of HTTP protocol',
+    important: true,
+  },
+  {
+    id: 5,
+    content:
+      'GET and POST are the most important methods of HTTP protoadfafasfdasdfadsfcol',
+    important: true,
+  },
 ];
 
 // Gerenciador de eventos que lida com requisiçoes HTTP GET
@@ -38,6 +49,13 @@ app.get('/api/notes/:id', (req, res) => {
   } else {
     res.status(404).end();
   }
+});
+
+app.delete('/api/notes/:id', (request, response) => {
+  const id = Number(request.params.id);
+  notes = notes.filter((note) => note.id !== id);
+
+  response.status(204).end();
 });
 
 const PORT = 3001;
