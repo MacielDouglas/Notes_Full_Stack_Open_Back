@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const cors = require(cors);
+const cors = require('cors');
 
 // permitir requisições de outras origens usando o middleware cors
 app.use(cors());
