@@ -1,8 +1,11 @@
 const express = require('express');
 const app = express();
+const cors = require(cors);
+
+// permitir requisições de outras origens usando o middleware cors
+app.use(cors());
 
 // Middleware que imprime informações sobre cada requisição enviada ao servidor.
-
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method);
   console.log('Path:  ', request.path);
