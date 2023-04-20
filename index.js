@@ -28,6 +28,18 @@ app.get('/api/notes', (request, response) => {
   response.json(notes);
 });
 
+// Esse app ira gerenciar todas as requisições HTTP GET com parametro id
+app.get('/api/notes/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const note = notes.find((note) => note.id === id);
+
+  if (note) {
+    res.json(note);
+  } else {
+    res.status(404).end();
+  }
+});
+
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
