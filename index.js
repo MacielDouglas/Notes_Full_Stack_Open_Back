@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 
-const Note = require('./models/note)
+const Note = require('./models/note');
 
 // Middleware que imprime informações sobre cada requisição enviada ao servidor.
 const requestLogger = (request, response, next) => {
@@ -24,37 +24,39 @@ app.use(requestLogger);
 app.use(express.static('build'));
 
 let notes = [
-  // {
-  //   id: 1,
-  //   content: 'HTML is easy',
-  //   important: true,
-  // },
-  // {
-  //   id: 2,
-  //   content: 'Browser can execute only JavaScript',
-  //   important: false,
-  // },
-  // {
-  //   id: 3,
-  //   content: 'GET and POST are the most important methods of HTTP protocol',
-  //   important: true,
-  // },
-  // {
-  //   id: 4,
-  //   content: 'GET and POST are the most important methods of HTTP protocol',
-  //   important: true,
-  // },
-  // {
-  //   id: 5,
-  //   content:
-  //     'GET and POST are the most important methods of HTTP protoadfafasfdasdfadsfcol',
-  //   important: true,
-  // },
+  {
+    id: 1,
+    content: 'HTML is easy',
+    important: true,
+  },
+  {
+    id: 2,
+    content: 'Browser can execute only JavaScript',
+    important: false,
+  },
+  {
+    id: 3,
+    content: 'GET and POST are the most important methods of HTTP protocol',
+    important: true,
+  },
+  {
+    id: 4,
+    content: 'GET and POST are the most important methods of HTTP protocol',
+    important: true,
+  },
+  {
+    id: 5,
+    content:
+      'GET and POST are the most important methods of HTTP protoadfafasfdasdfadsfcol',
+    important: true,
+  },
 ];
 
 // Gerenciador de eventos que lida com requisiçoes HTTP GET
 app.get('/api/notes', (request, response) => {
-  response.json(notes);
+  Note.find({}).then((notes) => {
+    response.json(notes);
+  });
 });
 
 app.post('/api/notes', (request, response) => {
