@@ -1,35 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
 
-const mongoose = require('mongoose');
-
-// NÃO SALVAR A SENHA NO GITHUB!!
-
-const url = `mongodb+srv://mAcIeLs:${password}@bancodadosnotes.xmxkgif.mongodb.net/noteApp?retryWrites=true&w=majority`;
-
-mongoose.set('strictQuery', false);
-mongoose.connect(url);
-
-const noteSchema = new mongoose.Schema({
-  content: String,
-  important: Boolean,
-});
-
-noteSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
-});
-
-const Note = mongoose.model('Note', noteSchema);
-
-// permitir requisições de outras origens usando o middleware cors
-app.use(cors());
-
-app.use(express.static('build'));
+const Note = require('./models/note');
 
 // Middleware que imprime informações sobre cada requisição enviada ao servidor.
 const requestLogger = (request, response, next) => {
@@ -44,86 +18,72 @@ const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' });
 };
 
+app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
+app.use(express.static('build'));
 
 let notes = [
-  {
-    id: 1,
-    content: 'HTML is easy',
-    important: true,
-  },
-  {
-    id: 2,
-    content: 'Browser can execute only JavaScript',
-    important: false,
-  },
-  {
-    id: 3,
-    content: 'GET and POST are the most important methods of HTTP protocol',
-    important: true,
-  },
-  {
-    id: 4,
-    content: 'GET and POST are the most important methods of HTTP protocol',
-    important: true,
-  },
-  {
-    id: 5,
-    content:
-      'GET and POST are the most important methods of HTTP protoadfafasfdasdfadsfcol',
-    important: true,
-  },
+  // {
+  //   id: 1,
+  //   content: 'HTML is easy',
+  //   important: true,
+  // },
+  // {
+  //   id: 2,
+  //   content: 'Browser can execute only JavaScript',
+  //   important: false,
+  // },
+  // {
+  //   id: 3,
+  //   content: 'GET and POST are the most important methods of HTTP protocol',
+  //   important: true,
+  // },
+  // {
+  //   id: 4,
+  //   content: 'GET and POST are the most important methods of HTTP protocol',
+  //   important: true,
+  // },
+  // {
+  //   id: 5,
+  //   content:
+  //     'GET and POST are the most important methods of HTTP protoadfafasfdasdfadsfcol',
+  //   important: true,
+  // },
 ];
 
 // Gerenciador de eventos que lida com requisiçoes HTTP GET
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World</h1>');
-});
-
 app.get('/api/notes', (request, response) => {
   Note.find({}).then((notes) => {
     response.json(notes);
   });
 });
 
-// lógica para gerar às notas um novo número de ID
-const generateId = () => {
-  const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
-  return maxId + 1;
-};
-
 app.post('/api/notes', (request, response) => {
   const body = request.body;
 
   // a propriedade content não pode estar vazia.
-  if (!body.content) {
-    return response.status(400).json({
-      error: 'content missing',
-    });
+  if (body.content === undefined) {
+    return response.status(400).json({ error: 'content missing' });
   }
 
-  const note = {
+  // Os objetos de note são criados com a função construtora Note. A resposta é enviada dentro da função callback para a operação save
+  const note = new Note({
     content: body.content,
     important: body.important || false,
-    id: generateId(),
-  };
+  });
 
-  notes = notes.concat(note);
-
-  response.json(note);
+  note.save().then((savedNote) => {
+    response.json(savedNote);
+  });
 });
 
 // Esse app ira gerenciar todas as requisições HTTP GET com parametro id
-app.get('/api/notes/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const note = notes.find((note) => note.id === id);
 
-  if (note) {
-    res.json(note);
-  } else {
-    res.status(404).end();
-  }
+app.get('/api/notes/:id', (request, response) => {
+  Note.findById(request.params.id).then((note) => {
+    response.json(note);
+  });
 });
 
 app.delete('/api/notes/:id', (request, response) => {
@@ -135,7 +95,7 @@ app.delete('/api/notes/:id', (request, response) => {
 
 app.use(unknownEndpoint);
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
