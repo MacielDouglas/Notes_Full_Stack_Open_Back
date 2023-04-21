@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 
-const Note = require('./models/note');
+const Note = require('./models/note)
 
 // Middleware que imprime informações sobre cada requisição enviada ao servidor.
 const requestLogger = (request, response, next) => {
@@ -54,9 +54,7 @@ let notes = [
 
 // Gerenciador de eventos que lida com requisiçoes HTTP GET
 app.get('/api/notes', (request, response) => {
-  Note.find({}).then((notes) => {
-    response.json(notes);
-  });
+  response.json(notes);
 });
 
 app.post('/api/notes', (request, response) => {
