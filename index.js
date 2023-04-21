@@ -2,6 +2,30 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 
+const mongoose = require('mongoose');
+
+// NÃO SALVAR A SENHA NO GITHUB!!
+
+const url = `mongodb+srv://mAcIeLs:${password}@bancodadosnotes.xmxkgif.mongodb.net/noteApp?retryWrites=true&w=majority`;
+
+mongoose.set('strictQuery', false);
+mongoose.connect(url);
+
+const noteSchema = new mongoose.Schema({
+  content: String,
+  important: Boolean,
+});
+
+noteSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
+
+const Note = mongoose.model('Note', noteSchema);
+
 // permitir requisições de outras origens usando o middleware cors
 app.use(cors());
 
@@ -58,7 +82,9 @@ app.get('/', (request, response) => {
 });
 
 app.get('/api/notes', (request, response) => {
-  response.json(notes);
+  Note.find({}).then((notes) => {
+    response.json(notes);
+  });
 });
 
 // lógica para gerar às notas um novo número de ID
