@@ -16,7 +16,12 @@ mongoose
   });
 
 const noteSchema = new mongoose.Schema({
-  content: String,
+  // validacao, é necessario pelo menos 5 caracteres
+  content: {
+    type: String,
+    minLength: 5,
+    required: true,
+  },
   important: Boolean,
 });
 
