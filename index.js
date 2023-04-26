@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 require('dotenv').config();
-
 const Note = require('./models/note');
 
 // Middleware que imprime informações sobre cada requisição enviada ao servidor.
@@ -59,7 +58,7 @@ app.get('/api/notes/:id', (request, response, next) => {
 
 app.delete('/api/notes/:id', (request, response, next) => {
   Note.findByIdAndRemove(request.params.id)
-    .then((result) => {
+    .then(() => {
       response.status(204).end();
     })
     .catch((error) => next(error));
