@@ -1,41 +1,38 @@
-const Note = require('../models/note');
-const User = require('../models/user');
+const Note = require('../models/note')
+const User = require('../models/user')
 
-// array inicialNotes contendo o estado inicial do banco de dados também está no módulo
 const initialNotes = [
   {
-    content: 'HTML is Easy',
-    important: false,
+    content: 'HTML is easy',
+    important: false
   },
   {
     content: 'Browser can execute only JavaScript',
-    important: true,
-  },
-];
+    important: true
+  }
+]
 
-// futura função noExistingId. que pode ser utilizada para criar um objeto ID de banco de dados que não pertence a nenhum objeto nota no banco de dados
 const nonExistingId = async () => {
-  const note = new Note({ content: 'willremovethissoon' });
-  await note.save();
-  await note.remove();
+  const note = new Note({ content: 'willremovethissoon' })
+  await note.save()
+  await note.remove()
 
-  return note._id.toString();
-};
+  return note._id.toString()
+}
 
-// função notesInDb que pode ser utilizada para checar as notas armazenadas no banco de dados.
 const notesInDb = async () => {
-  const notes = await Note.find({});
-  return notes.map((note) => note.toJSON());
-};
+  const notes = await Note.find({})
+  return notes.map(note => note.toJSON())
+}
 
 const usersInDb = async () => {
-  const users = await User.find({});
-  return users.map((u) => u.toJSON());
-};
+  const users = await User.find({})
+  return users.map(u => u.toJSON())
+}
 
 module.exports = {
   initialNotes,
   nonExistingId,
   notesInDb,
   usersInDb,
-};
+}
