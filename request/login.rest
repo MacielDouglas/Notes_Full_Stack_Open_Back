@@ -2,6 +2,16 @@ post http://localhost:3001/api/login
 Content-Type: application/json
 
 {
-  "username": "alguem",
-  "password": "batatinha"
+  "username": "mluukkai",
+  "password": "muluka"
+}
+
+#####
+post http://localhost:3001/api/notes
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2NDY2NGRkY2U0NTZkNWMwOGM5YmE5ZWUiLCJpYXQiOjE2ODQ0MzczOTF9.9Cc_FyF0wuJhGRh0B0IF4zeMnQ6AUHTMQ0478-WDC7U
+
+{
+  "content": "Single Page Apps use token authentication",
+  "important": true
 }
